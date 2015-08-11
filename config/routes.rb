@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
-  
-
-  get 'users/new'
 
   root 'static_pages#home'  # This is referred to using 'root_path'
-  get 'help' => 'static_pages#help'
+
+  get 'help' => 'static_pages#help' # These are named routes
   get 'about' => 'static_pages#about'
   get 'contact' => 'static_pages#contact'
   get 'signup' => 'users#new'
+  
+  resources :users # This is a RESTful resource that comes with CRUD, analagous to HTML's: POST, GET, PATCH, DELETE
   
 end
   # The priority is based upon order of creation: first created -> highest priority.

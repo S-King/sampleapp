@@ -10,8 +10,15 @@
   <body>
     <%= render 'layouts/header' %> <%# render is a rails helper, looks for file in app/views/layouts/_shim.html.erb and insert results into the view %>
       <div class="container">      <%# leading underscores indicate partials %>
+        
+        <% flash.each do | messages_type, message | %>
+          <div class="alert alert-<%= messages_type %>"><%= message %></div>
+          <% # :success is a symbol, but embedded Ruby automatically converts it to the string "success" %>
+          <% # Bootstrap CSS supports styling for four such flash classes (success, info, warning, and danger) %>
+        <% end %>
         <%= yield %>
         <%= render 'layouts/footer' %>
+        <%= debug(params) if Rails.env.development? %>
       </div>
   </body>
 </html>
