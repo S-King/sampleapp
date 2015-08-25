@@ -11,6 +11,17 @@ class UsersSignupTest < ActionDispatch::IntegrationTest # Using plural naming co
             email: "user@invalid", password: "123",
             password_confirmation: "321" }
       end
-    assert_template 'users/new'
+      #Assert_template makes sure that the correct template is rendered
+      
+    assert_template 'users/new' #Asserts template 'users/new' was rendered
+                                #can also use: assert_template layout: 'admin' for layout or nil/false 
+    assert_not flash.nil? #Could also be written as assert_not_nil flash
+        #Above we test flash error messages from application.html.erb view
+    
+      #Selects objects and makes equality tests: assert_select ‘td.highlight’, { :count => 2 }
+      #finds 2 td tags with the highlight class.
+    assert_select 'div#error_explanation'
+    assert_select 'div.field_with_errors' # After an invalid submission rails wraps fields with errors
+                                          # in divs with CSS class .field_with_errors
   end
 end
