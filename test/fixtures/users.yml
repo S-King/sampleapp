@@ -9,3 +9,11 @@
 # two:
 #   name: MyString
 #   email: MyString
+
+#Fixtures support the use of embedded ruby, as shown in the digest
+#To retrieve this user inside a test we use user = users(:ExampleUser)
+#noting that users corresponds with out users.yml filename
+ExampleUser:
+    name: Example one
+    email: trymeout@railstutorial.org
+    password_digest: <%= User.digest('password') %>

@@ -24,4 +24,18 @@ class UsersSignupTest < ActionDispatch::IntegrationTest # Using plural naming co
     assert_select 'div.field_with_errors' # After an invalid submission rails wraps fields with errors
                                           # in divs with CSS class .field_with_errors
   end
+
+  test "Should accept valid information" do
+    get signup_path #Visit the signup form page
+    assert_difference 'User.count', 1 do #Assert that after the block user count is +1
+      # post via redirect since we redirect once a user successfully logs in
+      post_via_redirect users_path, user: {name: "Example User",
+                                           email: "Exampleuser@example.com",
+                                           password: "password",
+                                           password_confirmation: "password"}
+      end
+    assert_template 'users/show'
+    assert_not flash.nil? #Check that the success flash pops up
+    assert is_logged_in?
+  end
 end

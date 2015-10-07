@@ -1,11 +1,17 @@
 Rails.application.routes.draw do
-
   root 'static_pages#home'  # This is referred to using 'root_path'
 
   get 'help' => 'static_pages#help' # These are named routes
   get 'about' => 'static_pages#about'
   get 'contact' => 'static_pages#contact'
   get 'signup' => 'users#new'
+  
+  #Unlike :users which uses resources to get the full suite of RESTful routes
+  #we only want :sessions using Named Routes. Get and Post for Login, Destroy for Logout
+  #HTTP: GET, POST, UPDATE, DELETE
+  get 'login' => 'sessions#new' #URL: /login, NAMEDROUTE: login_path, ACTION: new, page for new sessions
+  post 'login' => 'sessions#create' #URL: /login, NAMEDROUTE: login_path, Action: create, create new sessions (login)
+  delete 'logout' => 'sessions#destroy' #URL: /logout, NAMEDROUTE: logout_path, Action: destroy, delete session (logout)
   
   resources :users # This is a RESTful resource that comes with CRUD, analagous to HTML's: POST, GET, PATCH, DELETE
   

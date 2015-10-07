@@ -10,6 +10,11 @@ class UserTest < ActiveSupport::TestCase
             password: "foobar", password_confirmation: "foobar")
   end
   
+  test "authenticated? should return false if :remember_digest is nil" do
+    assert_not @user.authenticated?('')
+  end
+  
+  
   test "User model should be valid" do
     assert @user.valid?
   end
