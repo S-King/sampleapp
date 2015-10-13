@@ -13,7 +13,25 @@
 #Fixtures support the use of embedded ruby, as shown in the digest
 #To retrieve this user inside a test we use user = users(:ExampleUser)
 #noting that users corresponds with out users.yml filename
+
+
+#Since we only have password_digests in our DB we need the fixtures to match the DB
+#columns so here we set up example DB records, using digest to create a valid digest
+
 ExampleUser:
     name: Example one
     email: trymeout@railstutorial.org
     password_digest: <%= User.digest('password') %>
+    admin: true
+    
+Second:
+    name: Second YML Example
+    email: ymmmmmml2@example.com
+    password_digest: <%= User.digest('password') %>
+    
+<% 50.times do |n| %>
+user_<%= n %>:
+    name: <%= "User #{n}" %>
+    email: <%= "User#{n}YAML@example.com" %>
+    password_digest: <%= User.digest('password') %>
+<% end %>

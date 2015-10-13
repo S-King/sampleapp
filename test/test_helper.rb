@@ -11,9 +11,9 @@ class ActiveSupport::TestCase
   include ApplicationHelper
   # Add more helper methods to be used by all tests here...
   
-  def is_logged_in? #This is analagous to the logged_in?  methd in the 
+  def is_logged_in? #This is analagous to the logged_in?  method in the 
   #SessionHelper but we don't have access to it during tests
-    !session[:user_id].nil?
+    !session[:user_id].nil? # Not session for :user_id is nil
   end
   
   def log_in_as(user, options = {})

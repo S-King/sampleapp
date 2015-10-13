@@ -1,0 +1,12 @@
+<!-- This is a partial view for rendering a single user -->
+<!-- link_to(body, url, html_options = {}) body is a String; you can use URL helpers like posts_path -->
+<!-- link_to(body, url_options = {}, html_options = {}) url_options, except :method, is passed to url_for -->
+<li>
+     <%= gravatar_for user, size: 50 %>
+     <%= link_to user.name, user %>
+     <% if current_user.admin? && !current_user?(user) %> 
+     <!-- Make sure the requester is admin and not current user, can't delete yourself -->
+          <%= link_to "Delete", user, method: :delete, data: { confirm: "Are you sure?" } %>
+     <!-- link issues delete request by method: :delete -->
+     <% end %>
+</li>

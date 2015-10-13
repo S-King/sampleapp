@@ -7,14 +7,15 @@
         <li><%= link_to "Help",   help_path %></li>
         
         <% if logged_in? %>
-          <li><%= link_to "Users", '#' %></li>
+          <li><%= link_to "All Friends", users_path %></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               Account <b class="caret"></b>
             </a>
               <ul class="dropdown-menu"> <!-- Must enable Bootstrap's JS library for this in app/assets/JS/application.js -->
                 <li><%= link_to "Profile", current_user %><!-- # could also use user_path(current_user) --></li>
-                <li><%= link_to "Settings", '#' %></li>
+                <li><%= link_to "Settings", edit_user_path(current_user) %></li>
+                
                 <li class="divider"></li>
                 <li>
                   <%= link_to "Log Out", logout_path, method: :delete %> <!-- #or use "delete"??, we have to pass a method here to delete session -->

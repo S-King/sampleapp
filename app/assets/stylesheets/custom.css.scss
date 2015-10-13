@@ -112,6 +112,18 @@ aside {
     margin-top: 15px;
 }
 
+/* Users index CSS */
+.users {
+    list-style: none;
+    margin: 0;
+        li {
+            overflow: auto;
+            padding: 10px 0;
+            border-bottom: 1 px solid $gray-lighter;
+        }
+}
+
+
 /* Forms */
 
 input, textarea, select, .uneditable-input {

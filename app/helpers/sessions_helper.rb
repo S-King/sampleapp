@@ -51,6 +51,10 @@ module SessionsHelper
         cookies.delete(:remember_token)
     end
     
+    def current_user?(user) # Does instance match session or cookie, returns boolean
+        user == current_user
+    end
+    
     def current_user #Returns current user logged in, if any, otherwise returns nil
         if (user_id = session[:user_id]) # Retrieve user from temporary session if it exists
             @current_user ||= User.find_by(id: user_id)
@@ -68,7 +72,19 @@ module SessionsHelper
     def logged_in? # Returns true if current user is logged in, otherwise false
                    # Question mark at the end of the method is just a code convention
                    # meaning this method will return boolean values
-        !current_user.nil?
+        !current_user.nil? # Current_user is not nil
+    end
+    
+    # => Friendly Forwarding    #
+    def redirect_back_or(default)
+        redirect_to( session[:forwarding_url] || default ) # Redirect to the forwarding url stored in the temporary session or default
+        session.delete(:forwarding_url) # Delete the session forwarding url
     end
 
+    def store_location # Set :forwarding_url of session if get request
+        session[:forwarding_url] = request.url if request.get? # session method defined by rails, request object
+        #Prevents storing forwarding url if not logged in since we check for that before all get requests
+        # Store the request url in :forwarding_url of session if get request
+        # request.get? prevents a redirec that would issue a get request to a url expecting post patch or delete
+    end
 end

@@ -15,9 +15,6 @@ class SessionsHelperTest < ActionView::TestCase
         # Convention writes assert_equal <expected>, <actual>
         assert_equal @user, current_user 
         assert is_logged_in?
-        puts "@user = #{@user} and current_user = #{current_user} \n"
-        puts "Is @user = nil? --> #{@user.nil?} \n"
-        puts "Is @user = current_user? --> #{assert_equal @user, current_user} "
     end
     
     test "current_user should return nil when remember_digest is wrong" do
