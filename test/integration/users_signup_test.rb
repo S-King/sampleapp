@@ -4,6 +4,11 @@ class UsersSignupTest < ActionDispatch::IntegrationTest # Using plural naming co
   # test "the truth" do
   #   assert true
   # end
+  
+  def setup
+    ActionMailer::Base.deliveries.clear
+  end
+  
   test 'Should reject invalid signup information' do 
     get signup_path # visit the signup path
       assert_no_difference 'User.count' do # make sure number of users is the same 
@@ -25,17 +30,31 @@ class UsersSignupTest < ActionDispatch::IntegrationTest # Using plural naming co
                                           # in divs with CSS class .field_with_errors
   end
 
-  test "Should accept valid information" do
+  test "Should accept valid information with account activation" do
     get signup_path #Visit the signup form page
     assert_difference 'User.count', 1 do #Assert that after the block user count is +1
       # post via redirect since we redirect once a user successfully logs in
-      post_via_redirect users_path, user: {name: "Example User",
+      post users_path, user: {name: "Example User",
                                            email: "Exampleuser@example.com",
                                            password: "password",
                                            password_confirmation: "password"}
       end
+    assert_equal 1, ActionMailer::Base.deliveries.size # Make sure email is sent
+    # deliveries array is global and reset in setup
+    user =  assigns(:user) #lets us access instance variables in corresponding action
+    #Ex: Users controller's create action defines @user so we can access it in tests using assigns(:user)
+    assert_not user.activated?
+    log_in_as(user) # Try to log in before activation
+    assert_not is_logged_in?
+    get edit_account_activation_path("invalid token") # Invalid token
+    assert_not is_logged_in?
+    get edit_account_activation_path(user.activation_token, email: 'wrong email') # Right token, wrong email
+    assert_not is_logged_in?
+    get edit_account_activation_path(user.activation_token, email: user.email) # Right token, right email
+    assert user.reload.activated?
+    follow_redirect!
     assert_template 'users/show'
-    assert_not flash.nil? #Check that the success flash pops up
     assert is_logged_in?
+    assert_not flash.nil? #Check that the success flash pops up
   end
 end

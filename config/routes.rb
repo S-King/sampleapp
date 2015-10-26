@@ -13,7 +13,23 @@ Rails.application.routes.draw do
   post 'login' => 'sessions#create' #URL: /login, NAMEDROUTE: login_path, Action: create, create new sessions (login)
   delete 'logout' => 'sessions#destroy' #URL: /logout, NAMEDROUTE: logout_path, Action: destroy, delete session (logout)
   
+=begin
+Browsers request pages from Rails by making a request for a URL using a specific HTTP method, such as GET, POST, PATCH, PUT and DELETE. 
+Each method is a request to perform an operation on the resource. A resource route maps a number of related requests to actions in a single controller.
+When your Rails application receives an incoming request for --> DELETE /photos/17 it asks the router to map it to a controller action. 
+If the first matching route is --> resources :photos Rails would dispatch that request to the destroy method on the photos controller with { id: '17' } in params.
+
+HTTP  | Path	         |Controller#Action|    Named Route     	|        Used for
+GET	  |/photos	       |photos#index	   |photos_path           |display a list of all photos
+GET	  |/photos/new	   |photos#new	     |new_photo_path        |return an HTML form for creating a new photo
+POST  |/photos	       |photos#create	   |photos_path           |create a new photo
+GET	  |/photos/:id	   |photos#show	     |photo_path(photo)     |display a specific photo
+GET	  |/photos/:id/edit|photos#edit	     |edit_photo_path(photo)|return an HTML form for editing a photo
+PATCH |/photos/:id     |photos#update    |photo_path(photo)     |update a specific photo
+DELETE|/photos/:id	   |photos#destroy   |photo_path(photo)     |delete a specific photo
+=end 
   resources :users # This is a RESTful resource that comes with CRUD, analagous to HTML's: POST, GET, PATCH, DELETE
+  resources :account_activation, only: [:edit]
   
 end
   # The priority is based upon order of creation: first created -> highest priority.

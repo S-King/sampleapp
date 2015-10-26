@@ -63,4 +63,15 @@ class UsersControllerTest < ActionController::TestCase
     end
    assert_redirected_to root_url
   end
+  
+  test "Non-admins shouldn't be able to edit status" do
+    #Patch to :update with user hash for options
+    patch :update, id: @user, user: { admin: false}
+    assert @user.reload.admin? #Non-logged in user edit check
+    log_in_as(@other_user)
+    patch :update, id: @other_user, user: { password:              'password',
+                                            password_confirmation: 'password',
+                                            admin: true }
+    assert_not @other_user.reload.admin?
+  end
 end

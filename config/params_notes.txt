@@ -1,0 +1,13 @@
+PARAMS HASH NOTES
+The params hash:
+ Information included in requests like GET
+ GET '/blog' to: "blog#index" then need to create blog controller and index action
+ Visit WEBSITE/blog?page=1 and the get request creates a symbol params[:page] = 1 in the params hash, called query parameters used for different information on the same page
+ Visit '/blog/:id' to "blog#show" colon tells rails that part after blog should be saved to :id key in params hash, used for showing different pages
+ Now we can use things like BlogPost.find(params[:id])
+ 
+ Multiple things can be stored in the hash like /blog/asd?page=1
+ 
+ POST '/blog' to: "blog#create" when submitting a form the data stored in the fields are stored in params
+ <%= text_field_tag :title %> creates a text field and stores it as :title in params along with a few other symbols like uft-8 and authenticity_token
+ 

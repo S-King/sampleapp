@@ -1,5 +1,6 @@
 module SessionsHelper
-    #Helper methods not available in tests
+# log_in(user), remember(user), log_out, forget(user), current_user?, current_user, logged_in?, redirect_back_or(default), store_location    
+# --> Helper methods not available in tests
 
 =begin 
     -transient cookies, like the ones created with session are erased with the browser
@@ -61,7 +62,7 @@ module SessionsHelper
             # ||= is 'or equals' is equivalent to the += convention
         elsif (user_id = cookies.signed[:user_id]) #Otherwise return user from persistent session
             user = User.find_by(id: user_id)
-            if user && user.authenticated?(cookies[:remember_token])
+            if user && user.authenticated?(:remember, cookies[:remember_token])
                 log_in(user)
                 @current_user = user
             end

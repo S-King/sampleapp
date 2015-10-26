@@ -1,4 +1,6 @@
 module ApplicationHelper
+# full_title
+    
     #returns title on page-by-page basis
     def full_title(page_title = '')
        base_title = "Tutorial"

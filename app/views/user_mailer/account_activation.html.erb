@@ -1,0 +1,23 @@
+<!-- HTML template for account_activation -->
+
+<h1>Spencer's Portfolio</h1>
+
+<p> Hi <%= @user.name %> </p>
+
+<p>Welcome to my portfolio! Please click on the link below to activate your account:</p>
+
+<%= link_to "Activate Your Account", edit_account_activation_url(@user.activation_token, @user.email) %>
+
+<!-- link_to(body, url, html_options = {})
+  # url is a String; you can use URL helpers like
+  # posts_path
+
+link_to(body, url_options = {}, html_options = {})
+  # url_options, except :method, is passed to url_for -->
+  
+<!-- Since we modelled this as a resource this returns 
+http://www.example.com/account_activations/q5lt38hQDc_959PVoo6b7A/edit -->
+
+<!-- The way to set a query parameter in Rails is to include a hash in the named route -> edit_account_activation_url(@user.activation_token, email: @user.email)
+When using named routes in this way to define query parameters, Rails automatically escapes out any special characters. 
+The resulting email address will also be unescaped automatically in the controller, and will be available via params[:email]. -->

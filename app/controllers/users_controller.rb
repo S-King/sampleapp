@@ -1,4 +1,6 @@
 class UsersController < ApplicationController 
+# new, show, edit, index, update, create, destroy, (Private) user_params, logged_in_user, correct_user, admin_user
+  
 #  Where we house all the actions for our resources
   #?? is the @user here only available to the other actions in this controller ??
   
@@ -42,14 +44,13 @@ class UsersController < ApplicationController
        end
   end
   
-  
   def create 
     @user = User.new(user_params)
       if @user.save # If @user.save = true then...
-        flash[:success] = "You logged in! Welcome to my app" # Anything you place in the flash will be exposed to the 
+        @user.send_activation_email # Deliver activation email, instance and local variables work
+        flash[:info] = "Please check your email to activate your account." # Anything you place in the flash will be exposed to the 
         # very next action and then cleared out. This is a great way of doing notices and alerts.
-        log_in @user #Log the user in so that the redirect takes them to their profile
-        redirect_to @user # Equivalent to redirect_to user_url(@user) but inferred by rails
+        redirect_to root_url # Redirect to root_url since account isn't active
       else
         render 'new'
       end
@@ -79,7 +80,7 @@ class UsersController < ApplicationController
     end
     
     
-    # Before Filters 
+# Before Filters 
     
     #Confirms that a user is logged in
     def logged_in_user
