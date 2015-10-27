@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
 # User.digest, User.new_token, remember, forget, authenticated?(remember_token)
 
 # Virtual Attributes
-    attr_accessor :remember_token, :activation_token # Virtual attribute for storing in cookies
+    attr_accessor :remember_token, :activation_token, :reset_token# Virtual attribute for storing in cookies
     
 #Before/After actions and Filters
     before_save { self.email = email.downcase } # here we are passing a block, inside the user model/class using self is optional on the right side ie. self.email.downcase
@@ -80,6 +80,21 @@ class User < ActiveRecord::Base
        #Moved user manipulation out of the controller and into the model
        #Switched from @user in the controller to self in the model
    end
+   
+   def create_reset_digest # Set the password reset virtual attribute
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest, User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
+   end
+
+    def send_password_reset_email # Sends the password reset email
+        UserMailer.password_reset(self).deliver_now
+    end
+   
+   def password_reset_expired?
+       reset_sent_at < 2.hours.ago
+   end
+   
    
 private # Hidden, private methods cannot be called with an explicit receiver by definition e.g. some_instance.private_method(value)
     

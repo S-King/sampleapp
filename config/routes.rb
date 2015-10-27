@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   root 'static_pages#home'  # This is referred to using 'root_path'
 
   get 'help' => 'static_pages#help' # These are named routes
@@ -30,6 +34,7 @@ DELETE|/photos/:id	   |photos#destroy   |photo_path(photo)     |delete a specifi
 =end 
   resources :users # This is a RESTful resource that comes with CRUD, analagous to HTML's: POST, GET, PATCH, DELETE
   resources :account_activation, only: [:edit]
+  resources :password_resets, only: [:new, :create, :edit, :update]
   
 end
   # The priority is based upon order of creation: first created -> highest priority.
