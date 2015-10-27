@@ -63,20 +63,20 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
     config.action_mailer.raise_delivery_errors = true
-    config.action_mailer.delivery_method = :test
-    host = 'try2-s-king.c9.io'
+    config.action_mailer.delivery_method = :smtp
+    host = 'enthousiaste-choucroute-6240.herokuapp.com'
     config.action_mailer.default_url_options = { host: host }
     
     #Below we set up SMTP settings for our production environment
     #SENDGRID variables accessed via the ENv variable for security
     #can view with heroku config:get SENDGRID_XXXX
     ActionMailer::Base.smtp_settings = {
-      :address => 'smtp.sendgrid.net',
-      :port    => '587',
-      :authentication => :plain,
-      :user_name  => ENV['SENDGRID_USERNAME'],
-      :password =>  ENV['SENDGRID_PASSWORD'],
-      :domain   => 'heroku.com',
+      :address              => 'smtp.sendgrid.net',
+      :port                 => '587',
+      :authentication       => :plain,
+      :user_name            => ENV['SENDGRID_USERNAME'],
+      :password             => ENV['SENDGRID_PASSWORD'],
+      :domain               => 'heroku.com',
       :enable_starttls_auto => true
     }
 
