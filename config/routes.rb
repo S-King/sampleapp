@@ -34,7 +34,8 @@ DELETE|/photos/:id	   |photos#destroy   |photo_path(photo)     |delete a specifi
 =end 
   resources :users # This is a RESTful resource that comes with CRUD, analagous to HTML's: POST, GET, PATCH, DELETE
   resources :account_activation, only: [:edit]
-  resources :password_resets, only: [:new, :create, :edit, :update]
+  resources :password_resets,    only: [:new, :create, :edit, :update]
+  resources :microposts,         only: [:create, :destroy]
   
 end
   # The priority is based upon order of creation: first created -> highest priority.

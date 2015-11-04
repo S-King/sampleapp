@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
 # User.digest, User.new_token, remember, forget, authenticated?(remember_token)
 
+    has_many :microposts, dependent: :destroy
 # Virtual Attributes
-    attr_accessor :remember_token, :activation_token, :reset_token# Virtual attribute for storing in cookies
+    attr_accessor :remember_token, :activation_token, :reset_token # Virtual attribute for storing in cookies
     
 #Before/After actions and Filters
     before_save { self.email = email.downcase } # here we are passing a block, inside the user model/class using self is optional on the right side ie. self.email.downcase
@@ -71,8 +72,7 @@ class User < ActiveRecord::Base
    
    def activate # Activates an account, used by account_activations_controller
    # We don't use the user variable inside the model bc there is no such variable here
-    update_attribute(:activated, true) # activate user
-    update_attribute(:activated_at, Time.zone.now)
+    update_columns(activated: true, activated_at: Time.zone.now)
    end
    
    def send_activation_email
@@ -83,8 +83,7 @@ class User < ActiveRecord::Base
    
    def create_reset_digest # Set the password reset virtual attribute
     self.reset_token = User.new_token
-    update_attribute(:reset_digest, User.digest(reset_token))
-    update_attribute(:reset_sent_at, Time.zone.now)
+    update_columns(reset_digest: User.digest(reset_token), reset_sent_at: Time.zone.now)
    end
 
     def send_password_reset_email # Sends the password reset email
@@ -95,6 +94,11 @@ class User < ActiveRecord::Base
        reset_sent_at < 2.hours.ago
    end
    
+   # Defines proto-feed, see "Following Users" for full documentation
+   def feed
+       Micropost.where("user_id = ?", id)
+       # Using "X = ?", ? escapes out the id, preventing SQL injection
+   end
    
 private # Hidden, private methods cannot be called with an explicit receiver by definition e.g. some_instance.private_method(value)
     

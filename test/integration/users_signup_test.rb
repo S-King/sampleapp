@@ -46,6 +46,17 @@ class UsersSignupTest < ActionDispatch::IntegrationTest # Using plural naming co
     assert_not user.activated?
     log_in_as(user) # Try to log in before activation
     assert_not is_logged_in?
+    
+    # Index page
+    #Valid user login
+    log_in_as(users(:ExampleUser))
+    get users_path, page: 2
+    assert_no_match user.name, response.body
+    #Profile page
+    get user_path(user)
+    assert_redirected_to root_url
+    #Log out
+    delete logout_path
     get edit_account_activation_path("invalid token") # Invalid token
     assert_not is_logged_in?
     get edit_account_activation_path(user.activation_token, email: 'wrong email') # Right token, wrong email

@@ -1,11 +1,11 @@
-<% if @user.errors.any? # .any is just like the opposite of .empty? # %>
+<% if object.errors.any? # .any is just like the opposite of .empty? # %>
     <div id="error_explanation">
         <div class="alert alert-danger">
-            The form submitted contains <%= pluralize(@user.errors.count, "error") %>.
+            The form submitted contains <%= pluralize(object.errors.count, "error") %>.
         <% # Pluralize not auto-allowed, must 'include ActionView::Helpers::TextHelper' # %>
         </div>
         <ul>
-            <% @user.errors.full_messages.each do |msg| %>
+            <% object.errors.full_messages.each do |msg| %>
                 <li><%= msg %></li>
             <% end %>
         </ul>

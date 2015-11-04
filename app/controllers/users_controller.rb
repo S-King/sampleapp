@@ -19,6 +19,8 @@ class UsersController < ApplicationController
   #params hash holds all GET or POST parameters passed to the controller, as well as the :controller and :action keys.
   def show
     @user = User.find(params[:id])
+    redirect_to root_url and return unless @user.activated?
+    @microposts = @user.microposts.paginate(page: params[:page])
     #  debugger - commented out 7.1.4
   end
   
@@ -27,7 +29,7 @@ class UsersController < ApplicationController
   end
   
   def index
-    @users = User.paginate( page: params[:page]) # Pull users from DB and store in @user
+    @users = User.where(activated: true).paginate( page: params[:page]) # Pull users from DB and store in @user
     #paginate method will automatically look for a @users objects in a users view and display links to other pages
     #takes hash argument with key :page and value of page number, :page = nil returns first page
     #Gets params[:page] from will_paginate
@@ -81,15 +83,6 @@ class UsersController < ApplicationController
     
     
 # Before Filters 
-    
-    #Confirms that a user is logged in
-    def logged_in_user
-      unless logged_in? #Unless a user is logged in, run this loop
-        store_location
-        flash[:danger] = "Please log in to access this material." #Flash warning
-        redirect_to login_url #Go to login path
-      end
-    end
     
     def correct_user
       @user = User.find(params[:id]) #Find user by id key
