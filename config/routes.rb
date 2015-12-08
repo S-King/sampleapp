@@ -32,10 +32,19 @@ GET	  |/photos/:id/edit|photos#edit	     |edit_photo_path(photo)|return an HTML 
 PATCH |/photos/:id     |photos#update    |photo_path(photo)     |update a specific photo
 DELETE|/photos/:id	   |photos#destroy   |photo_path(photo)     |delete a specific photo
 =end 
-  resources :users # This is a RESTful resource that comes with CRUD, analagous to HTML's: POST, GET, PATCH, DELETE
+  resources :users do # This is a RESTful resource that comes with CRUD, analagous to HTML's: POST, GET, PATCH, DELETE
+    member do # get method to arrange for the URLs to respond appropriately. Meanwhile, the member method arranges 
+              # for the routes to respond to users/ID/following and users/ID/followers URLs containing the user id
+      get :followers, :following
+# HTTP request |	 URL	Action	   |        Named route
+#     GET      |/users/1/following |following	following_user_path(1)
+#     GET      |/users/1/followers |followers	followers_user_path(1)
+    end
+  end
   resources :account_activation, only: [:edit]
   resources :password_resets,    only: [:new, :create, :edit, :update]
   resources :microposts,         only: [:create, :destroy]
+  resources :relationships,      only: [:create, :destroy]
   
 end
   # The priority is based upon order of creation: first created -> highest priority.

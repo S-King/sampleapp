@@ -1,0 +1,17 @@
+<!-- Since we include stats on both user pages and home page we use ||= -->
+<!-- if @user isn't nil (ie. profile page) then uses it, otherwise it sets @user to current_user (ie. home) -->
+<% @user ||= current_user %>
+<div class="stats">
+    <a href="<%= following_user_path(@user) %>">
+        <strong id="following" class="stat">
+            <%= @user.following.count %>
+        </strong>
+        Following
+    </a>
+    <a href="<%= followers_user_path(@user) %>">
+        <strong id="followers" class="stat">
+            <%= @user.followers.count %>
+        </strong>
+        Followers
+    </a>
+</div>

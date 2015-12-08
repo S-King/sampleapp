@@ -1,0 +1,5 @@
+KNOWN BUGS
+----------
+
+--> Currently there are no validations forcing followers to be unique, I.E. a user can be followed multiple times by another user.
+

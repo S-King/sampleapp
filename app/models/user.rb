@@ -2,6 +2,17 @@ class User < ActiveRecord::Base
 # User.digest, User.new_token, remember, forget, authenticated?(remember_token)
 
     has_many :microposts, dependent: :destroy
+    # When the foreign key for a User model object is user_id, Rails infers the association automatically: by default,
+    # Rails expects a foreign key of the form <class>_id, where <class> is the lower-case version of the class name.
+    has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+    has_many :passive_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+    # By default, in a has_many :through association Rails looks for a foreign key corresponding to the singular version of the association. 
+    # With code like --> has_many :followeds, through: :active_relationships Rails would see “followeds” and use the singular “followed”, 
+    # assembling a collection using the followed_id in the relationships table, user.followeds is rather awkward, naturally Rails allows us to override the default, 
+    # in this case using the source parameter which explicitly tells Rails that the source of the following array is the set of followed ids.
+    has_many :following, through: :active_relationships, source: :followed
+    has_many :followers, through: :passive_relationships, source: :follower
+    
 # Virtual Attributes
     attr_accessor :remember_token, :activation_token, :reset_token # Virtual attribute for storing in cookies
     
@@ -96,9 +107,31 @@ class User < ActiveRecord::Base
    
    # Defines proto-feed, see "Following Users" for full documentation
    def feed
-       Micropost.where("user_id = ?", id)
-       # Using "X = ?", ? escapes out the id, preventing SQL injection
+    # Calls :id on each element in user.following
+    # User.first.following.map { |user| user.id }
+    # User.first.following.map(&:id) 
+    # Active Record provides:
+    # User.first.following_ids
+    following_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
+    # Use string interpolation for raw sql
+    Micropost.where("user_id IN (#{following_ids})
+        OR user_id = :user_id", user_id: id)
+    # Using "X = ?", ? escapes out the id, preventing SQL injection
+    # For high volume this would need to be converted to an a synchronous background job
    end
+   
+   def follow(other_user)
+       active_relationships.create(followed_id: other_user.id)
+   end
+   
+   def unfollow(other_user)
+       active_relationships.find_by(followed_id: other_user.id).destroy
+   end
+   
+   def following?(other_user) # Does the array of users this User follows include other_user?
+      following.include?(other_user) 
+   end
+   
    
 private # Hidden, private methods cannot be called with an explicit receiver by definition e.g. some_instance.private_method(value)
     

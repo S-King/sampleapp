@@ -8,9 +8,9 @@ class UsersController < ApplicationController
   #Before filter to call a method before an action is called, by default these run before
   #every action in the  controller so we limit it to :edit and :update by passing the :only options hash
   #This checks that a user is logged in when trying to edit or update
-  before_action :logged_in_user, only: [:edit, :update, :index, :destroy]
+  before_action :logged_in_user, only: [:edit, :update, :index, :destroy, :following, :followers]
   before_action :correct_user,   only: [:edit, :update] 
-  before_action :admin_user,     only: :destroy
+  before_action :admin_user,     only: [:destroy]
   
   def new
     @user = User.new
@@ -71,6 +71,20 @@ class UsersController < ApplicationController
   # like “Order #{order.id} has been deleted.” Lastly, and most importantly, it will also delete 
   # any child objects associated with that object!
   end
+  
+    def following
+      @title = "Following"
+      @user = User.find(params[:id])
+      @users = @user.following.paginate(page: params[:page])
+      render 'show_follow'
+    end
+    
+    def followers
+      @title = "Followers"
+      @user = User.find(params[:id])
+      @users = @user.followers.paginate(page: params[:page])
+      render 'show_follow'
+    end
     
   private
     
