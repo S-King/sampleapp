@@ -1,15 +1,11 @@
 Rails.application.routes.draw do
-  get 'password_resets/new'
-
-  get 'password_resets/edit'
-
   root 'static_pages#home'  # This is referred to using 'root_path'
 
   get 'help' => 'static_pages#help' # These are named routes
   get 'about' => 'static_pages#about'
   get 'contact' => 'static_pages#contact'
   get 'signup' => 'users#new'
-  
+  get 'addapage' => 'static_pages#howtoadd'
   #Unlike :users which uses resources to get the full suite of RESTful routes
   #we only want :sessions using Named Routes. Get and Post for Login, Destroy for Logout
   #HTTP: GET, POST, UPDATE, DELETE
